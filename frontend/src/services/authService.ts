@@ -5,7 +5,7 @@ if (!BASE_URL) {
   throw new Error("Missing VITE_API_BASE_URL");
 }
 export async function login(credentials: LoginRequest): Promise<LoginResponse> {
-  const res = await fetch(`${BASE_URL}/login`, {
+  const res = await fetch(`${BASE_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
