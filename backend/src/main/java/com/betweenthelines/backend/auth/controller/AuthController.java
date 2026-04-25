@@ -5,6 +5,7 @@ import com.betweenthelines.backend.auth.dto.LoginResponse;
 import com.betweenthelines.backend.auth.service.AuthService;
 import com.betweenthelines.backend.common.dto.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +20,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        return ApiResponse.success("Login Successful", authService.login(request));
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(ApiResponse.success("Login Successful", authService.login(request)));
     }
-    
+
 
 
 }

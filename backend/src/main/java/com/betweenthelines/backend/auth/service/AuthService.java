@@ -6,11 +6,14 @@ import com.betweenthelines.backend.common.exception.InvalidCredentialsException;
 import com.betweenthelines.backend.common.utils.HelperUtils;
 import com.betweenthelines.backend.librarian.entity.Librarian;
 import com.betweenthelines.backend.librarian.repository.LibrarianRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final LibrarianRepository librarianRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -22,6 +25,7 @@ public class AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
         String email = HelperUtils.normalizeEmail(loginRequest.email());
         String rawPassword = loginRequest.password();
+        log.error("successfully normalized email: {}", email);
         Librarian librarian = librarianRepository.findByEmail(email).orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
         if(!passwordEncoder.matches(rawPassword, librarian.getPasswordHash())) {
             throw new InvalidCredentialsException("Invalid Credentials.");
