@@ -9,7 +9,7 @@ export function useLogin() {
     setLoading(true);
     try {
       const data = await login({ email, password });
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.data.accessToken);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {

@@ -3,7 +3,15 @@ export interface LoginRequest {
   password: string;
 }
 export interface LoginResponse {
-  token: string;
+  success: boolean;
+  message: string;
+  data: TokenDetails;
+  timestamp: string;
+}
+interface TokenDetails {
+  accessToken: string;
+  tokenType: string;
+  expiresInSeconds: number;
 }
 export interface ApiError {
   message: string;
