@@ -13,6 +13,32 @@ Version 1.0 · April 2026
 
 ---
 
+## Backend Local Setup
+
+1. Start PostgreSQL with Docker:
+
+```bash
+docker compose up -d
+```
+
+2. Start the Spring Boot backend:
+
+```bash
+cd backend
+mvn spring-boot:run
+```
+
+3. On startup:
+- Spring Boot connects to PostgreSQL at `localhost:5432`
+- Flyway applies the schema migrations
+- One development institution and one librarian are seeded
+
+4. Development login credentials:
+- Email: `librarian@stjosephs.edu.in`
+- Password: `Password@123`
+
+---
+
 ## 1. System Overview
 
 Between the Lines is a multi-tenant library management system deployed as a single instance serving all client institutions (colleges, public libraries). Each institution (tenant) operates within an isolated data boundary under one shared deployment.
