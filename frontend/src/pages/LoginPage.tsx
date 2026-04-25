@@ -15,33 +15,66 @@ import PasswordIcon from "@mui/icons-material/Password";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import myImage from "../assets/descriptive_logo.png";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
+import isValidEmail from "@/utils/validationUtils";
 export default function LoginPage() {
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const { error, loading, handleLogin } = useLogin();
+  const [emailError, setEmailError] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<boolean>(false);
 
-  const [visible, setVisible] = useState<boolean>(false);
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
   const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const email = emailRef.current?.value ?? "";
-    const password = passwordRef.current?.value ?? "";
-    handleLogin(email, password);
+    let errorFlag = false;
+    const emailInProcess = email.trim();
+    const passwordInProcess = password.trim();
+    if (!emailInProcess) {
+      setEmailError("Required");
+      errorFlag = true;
+    } else {
+      setEmailError("");
+    }
+    if (!passwordInProcess) {
+      setPasswordError(true);
+      errorFlag = true;
+    } else {
+      setPasswordError(false);
+    }
+
+    if (!errorFlag) handleLogin(emailInProcess, passwordInProcess);
   };
+
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
-    if (visible) {
+    if (passwordVisible) {
       timeout = setTimeout(() => {
-        setVisible(false);
+        setPasswordVisible(false);
       }, 5000);
     }
     return () => clearTimeout(timeout);
-  }, [visible]);
+  }, [passwordVisible]);
 
-  const toggleVisible = () => {
-    setVisible((show) => !show);
+  const togglePasswordVisible = () => {
+    setPasswordVisible((show) => !show);
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const emailUnderTest = event.target.value;
+    setEmail(emailUnderTest);
+    if (emailUnderTest.trim() && !isValidEmail(emailUnderTest)) {
+      setEmailError("Invalid Email Address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+    setPasswordError(false);
   };
 
   return (
@@ -107,8 +140,11 @@ export default function LoginPage() {
             </Alert>
           )}
           <TextField
+            helperText={emailError}
+            error={emailError !== ""}
+            value={email}
             autoComplete="email"
-            inputRef={emailRef}
+            onChange={handleEmailChange}
             fullWidth
             label="Librarian Email"
             type="email"
@@ -126,11 +162,14 @@ export default function LoginPage() {
           />
           <Box>
             <TextField
+              helperText={passwordError ? "Required" : ""}
+              error={passwordError}
+              value={password}
               autoComplete="current-password"
-              inputRef={passwordRef}
+              onChange={handlePasswordChange}
               fullWidth
               label="Password"
-              type={visible ? "text" : "password"}
+              type={passwordVisible ? "text" : "password"}
               variant="outlined"
               placeholder="**********"
               slotProps={{
@@ -142,8 +181,12 @@ export default function LoginPage() {
                   ),
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton type="button" onClick={toggleVisible}>
-                        {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      <IconButton type="button" onClick={togglePasswordVisible}>
+                        {passwordVisible ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   ),
