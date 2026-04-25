@@ -4,23 +4,44 @@ import {
   Button,
   Chip,
   Divider,
+  IconButton,
+  InputAdornment,
   Link,
   TextField,
   Typography,
 } from "@mui/material";
+import MailIcon from "@mui/icons-material/Mail";
+import PasswordIcon from "@mui/icons-material/Password";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import myImage from "../assets/descriptive_logo.png";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
 export default function LoginPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const { error, loading, handleLogin } = useLogin();
 
+  const [visible, setVisible] = useState<boolean>(false);
+
   const onSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     const email = emailRef.current?.value ?? "";
     const password = passwordRef.current?.value ?? "";
     handleLogin(email, password);
+  };
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    if (visible) {
+      timeout = setTimeout(() => {
+        setVisible(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timeout);
+  }, [visible]);
+
+  const toggleVisible = () => {
+    setVisible((show) => !show);
   };
 
   return (
@@ -86,21 +107,48 @@ export default function LoginPage() {
             </Alert>
           )}
           <TextField
+            autoComplete="email"
             inputRef={emailRef}
             fullWidth
-            label="Librarian ID or Email"
+            label="Librarian Email"
             type="email"
             variant="outlined"
-            placeholder="Enter your credentials"
+            placeholder="vikram.bhat@edu.co.in"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MailIcon />
+                  </InputAdornment>
+                ),
+              },
+            }}
           />
           <Box>
             <TextField
+              autoComplete="current-password"
               inputRef={passwordRef}
               fullWidth
               label="Password"
-              type="password"
+              type={visible ? "text" : "password"}
               variant="outlined"
               placeholder="**********"
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PasswordIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton type="button" onClick={toggleVisible}>
+                        {visible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
             />
             <Link
               href="#"
