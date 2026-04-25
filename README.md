@@ -4,6 +4,15 @@ Version 1.0 · April 2026
 
 ---
 
+## Current Implementation Notes
+
+- The current login page is email-only. Librarian ID is no longer accepted on the frontend login form.
+- The login screen supports browser autofill for email and current password.
+- The frontend implementation is currently MUI-based for the login page.
+- Request-access and registration flows remain separate from the login flow.
+
+---
+
 ## 1. System Overview
 
 Between the Lines is a multi-tenant library management system deployed as a single instance serving all client institutions (colleges, public libraries). Each institution (tenant) operates within an isolated data boundary under one shared deployment.
