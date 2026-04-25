@@ -1,0 +1,26 @@
+import { ApiError, LoginRequest, LoginResponse } from "@/types/auth";
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+if (!BASE_URL) {
+  throw new Error("Missing VITE_API_BASE_URL");
+}
+export async function login(credentials: LoginRequest): Promise<LoginResponse> {
+  const res = await fetch(`${BASE_URL}/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  });
+  if (!res.ok) {
+    let message = "Login Failed!";
+    try {
+      const error: ApiError = await res.json();
+      if (error && typeof error.message === "string") {
+        message = error.message;
+      }
+    } catch {}
+    throw new Error(message);
+  }
+  return res.json();
+}
