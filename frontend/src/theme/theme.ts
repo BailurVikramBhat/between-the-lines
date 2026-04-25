@@ -1,166 +1,183 @@
-import { createTheme } from "@mui/material/styles";
-import type { ThemeOptions } from "@mui/material/styles";
+import { createTheme, type ThemeOptions } from "@mui/material/styles";
 
-const palette = {
-  parchment: "#FAF6F0",
-  parchmentDark: "#F2EBE0",
-  linen: "#EDE7DB",
-  walnut: "#3B2F2F",
-  mahogany: "#5C3D2E",
-  espresso: "#2A1F1F",
+const shadows = [
+  "none",
+  "0px 2px 1px -1px rgba(0, 0, 0, 0.109),0px 1px 1px 0px rgba(0, 0, 0, 0.076),0px 1px 3px 0px rgba(0, 0, 0, 0.066)",
+  "0px 3px 1px -2px rgba(0, 0, 0, 0.109),0px 2px 2px 0px rgba(0, 0, 0, 0.076),0px 1px 5px 0px rgba(0, 0, 0, 0.066)",
+  "0px 3px 3px -2px rgba(0, 0, 0, 0.109),0px 3px 4px 0px rgba(0, 0, 0, 0.076),0px 1px 8px 0px rgba(0, 0, 0, 0.066)",
+  "0px 2px 4px -1px rgba(0, 0, 0, 0.109),0px 4px 5px 0px rgba(0, 0, 0, 0.076),0px 1px 10px 0px rgba(0, 0, 0, 0.066)",
+  "0px 3px 5px -1px rgba(0, 0, 0, 0.109),0px 5px 8px 0px rgba(0, 0, 0, 0.076),0px 1px 14px 0px rgba(0, 0, 0, 0.066)",
+  "0px 3px 5px -1px rgba(0, 0, 0, 0.109),0px 6px 10px 0px rgba(0, 0, 0, 0.076),0px 1px 18px 0px rgba(0, 0, 0, 0.066)",
+  "0px 4px 5px -2px rgba(0, 0, 0, 0.109),0px 7px 10px 1px rgba(0, 0, 0, 0.076),0px 2px 16px 1px rgba(0, 0, 0, 0.066)",
+  "0px 5px 5px -3px rgba(0, 0, 0, 0.109),0px 8px 10px 1px rgba(0, 0, 0, 0.076),0px 3px 14px 2px rgba(0, 0, 0, 0.066)",
+  "0px 5px 6px -3px rgba(0, 0, 0, 0.109),0px 9px 12px 1px rgba(0, 0, 0, 0.076),0px 3px 16px 2px rgba(0, 0, 0, 0.066)",
+  "0px 6px 6px -3px rgba(0, 0, 0, 0.109),0px 10px 14px 1px rgba(0, 0, 0, 0.076),0px 4px 18px 3px rgba(0, 0, 0, 0.066)",
+  "0px 6px 7px -4px rgba(0, 0, 0, 0.109),0px 11px 15px 1px rgba(0, 0, 0, 0.076),0px 4px 20px 3px rgba(0, 0, 0, 0.066)",
+  "0px 7px 8px -4px rgba(0, 0, 0, 0.109),0px 12px 17px 2px rgba(0, 0, 0, 0.076),0px 5px 22px 4px rgba(0, 0, 0, 0.066)",
+  "0px 7px 8px -4px rgba(0, 0, 0, 0.109),0px 13px 19px 2px rgba(0, 0, 0, 0.076),0px 5px 24px 4px rgba(0, 0, 0, 0.066)",
+  "0px 7px 9px -4px rgba(0, 0, 0, 0.109),0px 14px 21px 2px rgba(0, 0, 0, 0.076),0px 5px 26px 4px rgba(0, 0, 0, 0.066)",
+  "0px 8px 9px -5px rgba(0, 0, 0, 0.109),0px 15px 22px 2px rgba(0, 0, 0, 0.076),0px 6px 28px 5px rgba(0, 0, 0, 0.066)",
+  "0px 8px 10px -5px rgba(0, 0, 0, 0.109),0px 16px 24px 2px rgba(0, 0, 0, 0.076),0px 6px 30px 5px rgba(0, 0, 0, 0.066)",
+  "0px 8px 11px -5px rgba(0, 0, 0, 0.109),0px 17px 26px 2px rgba(0, 0, 0, 0.076),0px 6px 32px 5px rgba(0, 0, 0, 0.066)",
+  "0px 9px 11px -5px rgba(0, 0, 0, 0.109),0px 18px 28px 2px rgba(0, 0, 0, 0.076),0px 7px 34px 6px rgba(0, 0, 0, 0.066)",
+  "0px 9px 12px -6px rgba(0, 0, 0, 0.109),0px 19px 29px 2px rgba(0, 0, 0, 0.076),0px 7px 36px 6px rgba(0, 0, 0, 0.066)",
+  "0px 10px 13px -6px rgba(0, 0, 0, 0.109),0px 20px 31px 3px rgba(0, 0, 0, 0.076),0px 8px 38px 7px rgba(0, 0, 0, 0.066)",
+  "0px 10px 13px -6px rgba(0, 0, 0, 0.109),0px 21px 33px 3px rgba(0, 0, 0, 0.076),0px 8px 40px 7px rgba(0, 0, 0, 0.066)",
+  "0px 10px 14px -6px rgba(0, 0, 0, 0.109),0px 22px 35px 3px rgba(0, 0, 0, 0.076),0px 8px 42px 7px rgba(0, 0, 0, 0.066)",
+  "0px 11px 14px -7px rgba(0, 0, 0, 0.109),0px 23px 36px 3px rgba(0, 0, 0, 0.076),0px 9px 44px 8px rgba(0, 0, 0, 0.066)",
+  "0px 11px 15px -7px rgba(0, 0, 0, 0.109),0px 24px 38px 3px rgba(0, 0, 0, 0.076),0px 9px 46px 8px rgba(0, 0, 0, 0.066)",
+] as ThemeOptions["shadows"];
 
-  brass: "#B08D57",
-  brassLight: "#C9A96E",
-  brassMuted: "rgba(176, 141, 87, 0.08)",
-
-  sage: "#6B8F71",
-  sageBg: "rgba(107, 143, 113, 0.08)",
-  dustyRose: "#B85C5C",
-  dustyRoseBg: "rgba(184, 92, 92, 0.08)",
-  amber: "#C48F3F",
-  amberBg: "rgba(196, 143, 63, 0.08)",
-  slate: "#6E7B8B",
-  slateBg: "rgba(110, 123, 139, 0.06)",
-
-  inkPrimary: "#2A1F1F",
-  inkSecondary: "#5E524A",
-  inkDisabled: "#A69E96",
-  divider: "rgba(59, 47, 47, 0.10)",
-};
-
-const themeOptions: ThemeOptions = {
+export const appThemeOptions: ThemeOptions = {
   palette: {
     mode: "light",
+
     primary: {
-      main: palette.brass,
-      light: palette.brassLight,
-      dark: "#8C6F3E",
-      contrastText: "#FFFFFF",
+      main: "#158037",
+      contrastText: "#ffffff",
     },
+
     secondary: {
-      main: palette.mahogany,
-      light: "#7A5544",
-      dark: palette.espresso,
-      contrastText: "#FFFFFF",
+      main: "#be198a",
+      contrastText: "#ffffff",
     },
+
+    success: {
+      main: "#30a660",
+      contrastText: "#000000",
+    },
+
+    warning: {
+      main: "#a08f08",
+      contrastText: "#000000",
+    },
+
+    error: {
+      main: "#bb5e1b",
+      contrastText: "#000000",
+    },
+
+    info: {
+      main: "#2086b6",
+      contrastText: "#000000",
+    },
+
     background: {
-      default: palette.parchment,
-      paper: "#FFFFFF",
+      default: "#fafbfb",
+      paper: "#f0f2f1",
     },
+
     text: {
-      primary: palette.inkPrimary,
-      secondary: palette.inkSecondary,
-      disabled: palette.inkDisabled,
+      primary: "#213126",
+      secondary: "#576f5f",
     },
-    divider: palette.divider,
+
+    divider: "#e6eae7",
+  },
+
+  spacing: 7,
+
+  shape: {
+    borderRadius: 10,
   },
 
   typography: {
-    fontFamily: '"Public Sans", sans-serif',
+    fontFamily:
+      '"DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+
     h1: {
-      fontFamily: '"Newsreader", serif',
-      fontSize: "3rem",
-      fontWeight: 600,
-      lineHeight: 1.1,
-      letterSpacing: "-0.03em",
+      fontWeight: 700,
+      letterSpacing: "-0.04em",
     },
     h2: {
-      fontFamily: '"Newsreader", serif',
-      fontSize: "2rem",
+      fontWeight: 700,
+      letterSpacing: "-0.035em",
+    },
+    h3: {
+      fontWeight: 700,
+      letterSpacing: "-0.03em",
+    },
+    h4: {
+      fontWeight: 700,
+      letterSpacing: "-0.025em",
+    },
+    h5: {
       fontWeight: 600,
-      lineHeight: 1.2,
       letterSpacing: "-0.02em",
     },
     h6: {
-      fontFamily: '"Newsreader", serif',
-      fontSize: "1.5rem",
-      fontWeight: 500,
-      lineHeight: 1.3,
-    },
-    subtitle1: {
-      fontFamily: '"Public Sans", sans-serif',
-      fontSize: "1rem",
       fontWeight: 600,
-      lineHeight: 1.2,
-      letterSpacing: "0.02em",
-    },
-    body1: {
-      fontFamily: '"Public Sans", sans-serif',
-      fontSize: "1rem",
-      fontWeight: 400,
-      lineHeight: 1.5,
-    },
-    body2: {
-      fontFamily: '"Public Sans", sans-serif',
-      fontSize: "0.875rem",
-      fontWeight: 400,
-      lineHeight: 1.4,
+      letterSpacing: "-0.015em",
     },
     button: {
-      fontFamily: '"Public Sans", sans-serif',
-      fontSize: "0.875rem",
       fontWeight: 600,
-      lineHeight: 1.2,
-      letterSpacing: "0.02em",
       textTransform: "none",
     },
   },
 
-  shape: {
-    borderRadius: 6,
-  },
+  shadows,
 
   components: {
-    MuiTextField: {
-      defaultProps: {
-        variant: "outlined",
-        size: "small",
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: "#fafbfb",
+        },
       },
     },
 
-    MuiInputLabel: {
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
       styleOverrides: {
         root: {
-          fontFamily: '"Public Sans", sans-serif',
-          fontSize: "0.875rem",
+          borderRadius: 10,
           fontWeight: 600,
-          letterSpacing: "0.02em",
-          color: palette.inkSecondary,
-          "&.Mui-focused": {
-            color: palette.brass,
-          },
         },
+      },
+    },
+
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          backgroundImage: "none",
+          border: "1px solid #e6eae7",
+        },
+      },
+    },
+
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
+        },
+      },
+    },
+
+    MuiTextField: {
+      defaultProps: {
+        variant: "outlined",
       },
     },
 
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          fontFamily: '"Public Sans", sans-serif',
-          fontSize: "1rem",
-          backgroundColor: "#FFFFFF",
-          borderRadius: 6,
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "rgba(59, 47, 47, 0.18)",
-            transition: "border-color 200ms ease",
-          },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "rgba(176, 141, 87, 0.45)",
-          },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: palette.brass,
-            borderWidth: 1.5,
-          },
-          "& input::placeholder": {
-            color: palette.inkDisabled,
-            opacity: 1,
-          },
+          borderRadius: 10,
+        },
+      },
+    },
+
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
         },
       },
     },
   },
 };
 
-const theme = createTheme(themeOptions);
-
-export default theme;
+export const theme = createTheme(appThemeOptions);

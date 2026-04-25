@@ -8,7 +8,7 @@ import "@fontsource/public-sans/600.css";
 import App from "./App";
 import "@/styles/globals.css";
 import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./theme/theme";
+import { theme } from "./theme/theme";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
