@@ -18,6 +18,7 @@ import myImage from "../assets/descriptive_logo.png";
 import { useEffect, useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
 import isValidEmail from "@/utils/validationUtils";
+import { Link as RouterLink } from "react-router-dom";
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -194,7 +195,8 @@ export default function LoginPage() {
               }}
             />
             <Link
-              href="#"
+              component={RouterLink}
+              to="/forgot-password"
               sx={{
                 mt: 1,
                 display: "block",
@@ -230,7 +232,8 @@ export default function LoginPage() {
               Restricted access. Authorized personnel only.
             </Typography>
             <Link
-              href="#"
+              component={RouterLink}
+              to="/request-access"
               sx={{
                 mt: 1,
                 display: "block",
