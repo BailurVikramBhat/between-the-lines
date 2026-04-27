@@ -2,6 +2,8 @@ package com.betweenthelines.backend.auth.service;
 
 import com.betweenthelines.backend.auth.dto.LoginRequest;
 import com.betweenthelines.backend.auth.dto.LoginResponse;
+import com.betweenthelines.backend.auth.security.JwtConfig;
+import com.betweenthelines.backend.auth.security.JwtService;
 import com.betweenthelines.backend.common.exception.InvalidCredentialsException;
 import com.betweenthelines.backend.common.utils.HelperUtils;
 import com.betweenthelines.backend.librarian.entity.Librarian;
@@ -16,10 +18,14 @@ public class AuthService {
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final LibrarianRepository librarianRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final JwtConfig jwtConfig;
 
-    public AuthService(LibrarianRepository librarianRepository, PasswordEncoder bCryptPasswordEncoder) {
+    public AuthService(LibrarianRepository librarianRepository, PasswordEncoder bCryptPasswordEncoder, JwtService jwtService, JwtConfig jwtConfig) {
         this.librarianRepository = librarianRepository;
         this.passwordEncoder = bCryptPasswordEncoder;
+        this.jwtService = jwtService;
+        this.jwtConfig = jwtConfig;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -30,7 +36,8 @@ public class AuthService {
         if(!passwordEncoder.matches(rawPassword, librarian.getPasswordHash())) {
             throw new InvalidCredentialsException("Invalid Credentials.");
         }
-        return new LoginResponse("temp_access_token", "Bearer", 604800L);
+        String token = jwtService.generateToken(librarian);
+        return new LoginResponse(token, "Bearer", jwtConfig.getExpirationSeconds());
     }
 
 }
