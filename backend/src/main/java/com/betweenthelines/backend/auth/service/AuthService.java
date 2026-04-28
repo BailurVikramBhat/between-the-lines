@@ -2,6 +2,7 @@ package com.betweenthelines.backend.auth.service;
 
 import com.betweenthelines.backend.auth.dto.LoginRequest;
 import com.betweenthelines.backend.auth.dto.LoginResponse;
+import com.betweenthelines.backend.auth.dto.MeResponse;
 import com.betweenthelines.backend.auth.security.JwtConfig;
 import com.betweenthelines.backend.auth.security.JwtService;
 import com.betweenthelines.backend.common.exception.InvalidCredentialsException;
@@ -31,7 +32,6 @@ public class AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
         String email = HelperUtils.normalizeEmail(loginRequest.email());
         String rawPassword = loginRequest.password();
-        log.error("successfully normalized email: {}", email);
         Librarian librarian = librarianRepository.findByEmail(email).orElseThrow(() -> new InvalidCredentialsException("Invalid Credentials."));
         if(!passwordEncoder.matches(rawPassword, librarian.getPasswordHash())) {
             throw new InvalidCredentialsException("Invalid Credentials.");
@@ -40,4 +40,8 @@ public class AuthService {
         return new LoginResponse(token, "Bearer", jwtConfig.getExpirationSeconds());
     }
 
+
+    public MeResponse meProfile(final Librarian librarian) {
+        return new MeResponse(librarian.getId(), librarian.getEmail(), librarian.getFullName(), librarian.getInstitution().getId(), librarian.getInstitution().getSlug(), librarian.getTotpEnabled(), librarian.getTempPassword());
+    }
 }
