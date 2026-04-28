@@ -6,6 +6,7 @@ interface AuthContextValue {
   profile: MeResponse | null;
   loading: boolean;
   logout: () => void;
+  loginSuccess: (token: string) => Promise<void>;
 }
 const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -29,8 +30,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("token");
     setProfile(null);
   }
+
+  async function loginSuccess(token: string) {
+    try {
+      const me = await getMe(token);
+      localStorage.setItem("token", token);
+      setProfile(me);
+    } catch (err) {
+      localStorage.removeItem("token");
+      throw err;
+    }
+  }
   return (
-    <AuthContext.Provider value={{ profile, loading, logout }}>
+    <AuthContext.Provider value={{ profile, loading, logout, loginSuccess }}>
       {children}
     </AuthContext.Provider>
   );
