@@ -10,13 +10,16 @@ import App from "./App";
 import "@/styles/globals.css";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "./theme/theme";
+import { AuthProvider } from "./context/AuthContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,
