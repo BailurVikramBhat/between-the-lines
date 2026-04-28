@@ -16,3 +16,12 @@ interface TokenDetails {
 export interface ApiError {
   message: string;
 }
+export interface MeResponse {
+  id: string;
+  email: string;
+  fullName: string;
+  tenantId: string;
+  tenantSlug: string;
+  totpEnabled: boolean;
+  isTempPassword: boolean;
+}
