@@ -1,8 +1,6 @@
 package com.betweenthelines.backend.auth.controller;
 
-import com.betweenthelines.backend.auth.dto.LoginRequest;
-import com.betweenthelines.backend.auth.dto.LoginResponse;
-import com.betweenthelines.backend.auth.dto.MeResponse;
+import com.betweenthelines.backend.auth.dto.*;
 import com.betweenthelines.backend.auth.service.AuthService;
 import com.betweenthelines.backend.common.dto.ApiResponse;
 import com.betweenthelines.backend.librarian.entity.Librarian;
@@ -27,6 +25,11 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<MeResponse>> me(@AuthenticationPrincipal Librarian librarian) {
         return ResponseEntity.ok(ApiResponse.success("Current user fetched successfully", authService.meProfile(librarian)));
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<ApiResponse<UpdatePasswordResponse>> updatePassword(@AuthenticationPrincipal Librarian librarian, @Valid @RequestBody UpdatePasswordRequest request) {
+        return ResponseEntity.ok(ApiResponse.success("Password updated successfully", authService.updatePassword(librarian, request)));
     }
 
 
