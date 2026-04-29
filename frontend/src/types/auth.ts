@@ -25,3 +25,10 @@ export interface MeResponse {
   totpEnabled: boolean;
   isTempPassword: boolean;
 }
+export interface UpdatePasswordRequest {
+  password: string;
+  newPassword: string;
+}
+export interface UpdatePasswordResponse {
+  message: string;
+}

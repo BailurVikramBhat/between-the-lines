@@ -4,17 +4,26 @@ import RequestAccessPage from "./pages/RequestAccessPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import DashboardPage from "./pages/DashboardPage";
 import { useAuth } from "./context/AuthContext";
+import { Box, CircularProgress } from "@mui/material";
+
+function FullScreenLoader() {
+  return (
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <CircularProgress />
+    </Box>
+  );
+}
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { profile, loading } = useAuth();
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <FullScreenLoader />;
   if (!profile) return <Navigate to="/login" replace />;
   return <div>{children}</div>;
 }
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { profile, loading } = useAuth();
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <FullScreenLoader />;
   if (profile) return <Navigate to="/dashboard" replace />;
   return <div>{children}</div>;
 }
