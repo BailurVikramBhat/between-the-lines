@@ -59,6 +59,6 @@ public class AuthService {
         librarian.setPasswordHash(passwordEncoder.encode(request.newPassword()));
         librarian.setTempPassword(false);
         librarianRepository.save(librarian);
-        return new UpdatePasswordResponse("Password changed successfully!. Any further attempts require Institution approval. Please raise a request from the settings page if needed.");
+        return new UpdatePasswordResponse("Password changed successfully! Any further changes require Institution approval. Please raise a request from the settings page if needed.");
     }
 }
