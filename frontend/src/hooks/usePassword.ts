@@ -1,7 +1,5 @@
 import { updatePassword } from "@/services/authService";
-import { UpdatePasswordResponse } from "@/types/auth";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 export function usePassword() {
   const [error, setError] = useState<string | null>(null);

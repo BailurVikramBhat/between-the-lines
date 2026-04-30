@@ -1,6 +1,5 @@
 import {
   Alert,
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -27,7 +26,7 @@ export default function ConfirmPasswordDialog({
   onSuccess,
 }: {
   open: boolean;
-  onSuccess: () => void;
+  onSuccess: (message: string) => void;
 }) {
   const [isOpen, setIsOpen] = useState<boolean>(open);
   const [existingPassword, setExistingPassword] = useState<string>("");
@@ -49,7 +48,7 @@ export default function ConfirmPasswordDialog({
   const passwordsMatch = password === confirmPassword;
   const canSubmit = allRulesPassing && passwordsMatch;
   const handleClose = (
-    event: {},
+    _event: {},
     reason: "backdropClick" | "escapeKeyDown",
   ) => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") {
@@ -58,13 +57,13 @@ export default function ConfirmPasswordDialog({
     setIsOpen(false);
   };
   useEffect(() => {
-    if (successMessage) {
+    if (successMessage?.trim()) {
       setTimeout(() => {
         setIsOpen(false);
-        onSuccess();
+        onSuccess(successMessage);
       }, 500);
     }
-  }, [successMessage]);
+  }, [onSuccess, successMessage]);
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
     if (existingPasswordVisible) {
@@ -141,12 +140,12 @@ export default function ConfirmPasswordDialog({
   };
 
   useEffect(() => {
-    if (error || successMessage) {
+    if (error) {
       setSnackbarOpen(true);
     }
-  }, [error, successMessage]);
+  }, [error]);
   const handleSnackbarClose = (
-    event: React.SyntheticEvent | Event,
+    _event: React.SyntheticEvent | Event,
     reason?: string,
   ) => {
     if (reason === "clickaway") return;
@@ -382,7 +381,7 @@ export default function ConfirmPasswordDialog({
           variant="filled"
           onClose={handleSnackbarClose}
         >
-          {error ? error : successMessage}
+          {error}
         </Alert>
       </Snackbar>
     </>
