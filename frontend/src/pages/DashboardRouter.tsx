@@ -15,8 +15,12 @@ import {
   ListItem,
   ListItemText,
   Badge,
+  Button,
+  Alert,
 } from "@mui/material";
 import elegantLogo from "@/assets/elegant_logo.png";
+import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
+import { CircularProgress } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import CloseIcon from "@mui/icons-material/Close";
 import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
@@ -25,6 +29,7 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import WarningDialog from "@/components/static/WarningDialog";
+import { useNotification } from "@/hooks/useNotification";
 
 const navItems = ["Dashboard", "Catalog", "Members", "Circulation"];
 
@@ -41,6 +46,14 @@ export default function LibraryAppBar({
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [notificationDrawerOpen, setNotificationDrawerOpen] =
     useState<boolean>(false);
+  const {
+    notifications,
+    unreadCount,
+    loading: notificationsLoading,
+    error: notificationsError,
+    loadNotifications,
+    dismissNotification,
+  } = useNotification();
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -214,6 +227,7 @@ export default function LibraryAppBar({
             <IconButton
               onClick={() => {
                 setNotificationDrawerOpen(true);
+                loadNotifications();
               }}
               size="small"
               aria-label="notifications"
@@ -221,7 +235,7 @@ export default function LibraryAppBar({
                 color: "#142a44",
               }}
             >
-              <Badge badgeContent={1} color="primary">
+              <Badge badgeContent={unreadCount} color="primary">
                 <NotificationsNoneRoundedIcon sx={{ fontSize: 22 }} />
               </Badge>
             </IconButton>
@@ -275,15 +289,26 @@ export default function LibraryAppBar({
         open={notificationDrawerOpen}
         anchor="right"
         onClose={() => setNotificationDrawerOpen(false)}
+        sx={{}}
       >
-        <Box sx={{ width: 300, p: 2 }} role="presentation">
+        <Box
+          sx={{
+            width: 300,
+            pb: 2,
+            backgroundColor: "#f1fbf1",
+            minHeight: "100vh",
+          }}
+          role="presentation"
+        >
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "flex-end",
-              mb: 2,
+              px: 2,
+              py: 1,
               textAlign: "center",
+              backgroundColor: "white",
             }}
           >
             <Typography variant="h6">All Notifications</Typography>
@@ -291,18 +316,126 @@ export default function LibraryAppBar({
               <CloseIcon />
             </IconButton>
           </Box>
-          <List>
-            {[
-              "New message",
-              "Server update",
-              "Task assigned",
-              "Bug reported",
-            ].map((text, index) => (
-              <ListItem key={text} component="ul">
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+          <Box
+            sx={{
+              px: 2,
+              py: 1,
+            }}
+          >
+            <List>
+              {notificationsLoading && (
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          width: "100%",
+                          height: "100%",
+                          minHeight: "150px",
+                          padding: 3,
+                        }}
+                      >
+                        <CircularProgress />
+                      </Box>
+                    }
+                  />
+                </ListItem>
+              )}
+              {notificationsError && (
+                <Alert variant="filled" severity="error">
+                  {notificationsError}
+                </Alert>
+              )}
+              {!notificationsLoading &&
+                !notificationsError &&
+                notifications.length === 0 && (
+                  <ListItem>
+                    <ListItemText primary="No notifications" />
+                  </ListItem>
+                )}
+              {!notificationsLoading &&
+                !notificationsError &&
+                notifications.map((notification) => (
+                  <ListItem
+                    key={notification.id}
+                    alignItems="flex-start"
+                    sx={{
+                      mb: 2,
+                      borderRadius: "1rem",
+                      backgroundColor: "white",
+                    }}
+                  >
+                    <ListItemText
+                      primary={
+                        <Stack
+                          direction="row"
+                          sx={{
+                            alignItems: "center",
+                            gap: 2,
+                            mb: 2,
+                          }}
+                        >
+                          <PrivacyTipIcon
+                            sx={{
+                              fontSize: "3rem",
+                              backgroundColor: "#be198a",
+                              color: "white",
+                              borderRadius: "4rem",
+                              p: 1,
+                            }}
+                          />
+                          <span>{notification.title}</span>
+                        </Stack>
+                      }
+                      secondary={
+                        <Stack
+                          direction="column"
+                          sx={{
+                            gap: 2,
+                          }}
+                        >
+                          <span>{notification.description}</span>
+                          {notification.primaryActionLabel && (
+                            <Stack
+                              direction="column"
+                              sx={{
+                                gap: 2,
+                              }}
+                            >
+                              <Button
+                                variant="contained"
+                                onClick={() =>
+                                  navigate(notification.primaryActionUrl)
+                                }
+                              >
+                                {notification.primaryActionLabel}
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                onClick={() => {
+                                  dismissNotification(notification.id);
+                                  setNotificationDrawerOpen(false);
+                                }}
+                              >
+                                Dismiss
+                              </Button>
+                            </Stack>
+                          )}
+                        </Stack>
+                      }
+                      sx={[
+                        !notification.read && {
+                          "& .MuiListItemText-primary": { fontWeight: 900 },
+                        },
+                      ]}
+                    />
+                  </ListItem>
+                ))}
+            </List>
+          </Box>
         </Box>
       </Drawer>
     </>
