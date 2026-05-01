@@ -10,9 +10,15 @@ import {
   ButtonBase,
   Menu,
   MenuItem,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Badge,
 } from "@mui/material";
 import elegantLogo from "@/assets/elegant_logo.png";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import CloseIcon from "@mui/icons-material/Close";
 import NotificationsNoneRoundedIcon from "@mui/icons-material/NotificationsNoneRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import { useState } from "react";
@@ -33,6 +39,8 @@ export default function LibraryAppBar({
 }: LibraryAppBarProps) {
   const [avatarEl, setAvatarEl] = useState<null | HTMLElement>(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [notificationDrawerOpen, setNotificationDrawerOpen] =
+    useState<boolean>(false);
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -204,13 +212,18 @@ export default function LibraryAppBar({
             }}
           >
             <IconButton
+              onClick={() => {
+                setNotificationDrawerOpen(true);
+              }}
               size="small"
               aria-label="notifications"
               sx={{
                 color: "#142a44",
               }}
             >
-              <NotificationsNoneRoundedIcon sx={{ fontSize: 22 }} />
+              <Badge badgeContent={1} color="primary">
+                <NotificationsNoneRoundedIcon sx={{ fontSize: 22 }} />
+              </Badge>
             </IconButton>
 
             <IconButton
@@ -258,6 +271,40 @@ export default function LibraryAppBar({
           </Stack>
         </Toolbar>
       </AppBar>
+      <Drawer
+        open={notificationDrawerOpen}
+        anchor="right"
+        onClose={() => setNotificationDrawerOpen(false)}
+      >
+        <Box sx={{ width: 300, p: 2 }} role="presentation">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              mb: 2,
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="h6">All Notifications</Typography>
+            <IconButton onClick={() => setNotificationDrawerOpen(false)}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <List>
+            {[
+              "New message",
+              "Server update",
+              "Task assigned",
+              "Bug reported",
+            ].map((text, index) => (
+              <ListItem key={text} component="ul">
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
     </>
   );
 }
